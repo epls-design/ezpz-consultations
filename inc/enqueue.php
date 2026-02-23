@@ -54,6 +54,21 @@ function lemonjelly_scripts() {
     );
   }
 
+  // if option ezpz_animation is true, enqueue the animation script
+  $enable_animation = get_field('ezpz_animation', 'option');
+  if ($enable_animation) {
+    $animation_js_path = get_stylesheet_directory() . '/js/animate-scroll.js';
+    if (file_exists($animation_js_path)) {
+      wp_enqueue_script(
+        'ezpz-animate-scroll',
+        get_stylesheet_directory_uri() . '/js/animate-scroll.js',
+        array('jellypress-scripts'),
+        filemtime($animation_js_path),
+        true
+      );
+    }
+  }
+
   // Enqueue lemonjelly.js
   $custom_js_path = get_stylesheet_directory() . '/lemonjelly.js';
   if (file_exists($custom_js_path)) {
@@ -85,6 +100,14 @@ add_action('wp_head', function () {
   $acf_opts = get_fields('options');
   if (isset($acf_opts['unfiltered_html'])) {
     echo $acf_opts['unfiltered_html'];
+  }
+});
+
+add_action('wp_head', function () {
+  $bugherd = get_field('bugherd', 'option');
+  $bugherd_script = get_field('bugherd_script', 'option');
+  if ($bugherd && $bugherd_script) {
+    echo $bugherd_script;
   }
 });
 

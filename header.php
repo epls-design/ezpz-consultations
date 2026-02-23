@@ -23,6 +23,7 @@ if ($is_standard_navbar) {
 }
 
 
+
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>

@@ -68,3 +68,25 @@ function lemonjelly_load_acf_local_json($paths) {
   }
   return $paths;
 }
+
+add_filter('acf/update_value', 'lemonjelly_kses_acf', 1, 3);
+function lemonjelly_kses_acf($data, $post_id, $field) {
+  if (!is_array($data)) {
+    // If it's not an array, sanitize
+    if ($field['_name'] != 'unfiltered_html' || $field['_name'] != 'bugherd_script') {
+      // return wp_kses_post($data);
+      return $data;
+    } else {
+      // if fieldName = 'unfiltered_html' don't sanitize
+      return $data;
+    }
+  }
+  $return = array();
+  if (count($data)) {
+    // If it's an array (eg. repeater, group, etc) repeat this function on each value
+    foreach ($data as $index => $value) {
+      $return[$index] = lemonjelly_kses_acf($value, $post_id, $field);
+    }
+  }
+  return $return;
+}
