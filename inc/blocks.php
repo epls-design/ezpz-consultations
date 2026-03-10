@@ -25,20 +25,22 @@ add_action('acf/init', function () {
 /**
  * Register Child Theme Blocks and remove hero blocks set in the parent theme
  */
-add_filter('ezpz_allowed_blocks', function ($allowed_blocks) {
+add_filter('allowed_block_types_all', function ($allowed_block_types, $editor_context) {
 
   global $lemonjelly_blocks;
   foreach ($lemonjelly_blocks as $slug) {
-    $allowed_blocks[] = 'ezpz/' . $slug;
+    $allowed_block_types[] = 'ezpz/' . $slug;
   }
 
   $blocks_to_unregister = ['ezpz/hero-post', 'ezpz/hero-page'];
   foreach ($blocks_to_unregister as $block) {
-    unset($allowed_blocks[array_search($block, $allowed_blocks)]);
+    unset($allowed_block_types[array_search($block, $allowed_block_types)]);
   }
 
-  return $allowed_blocks;
-});
+  return $allowed_block_types;
+}, 101, 2);
+
+
 
 /**
  * Sets up child theme block template
